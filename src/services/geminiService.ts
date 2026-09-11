@@ -151,28 +151,37 @@ export async function getAiraResponse(
  * Preserves AIRA's iconic voice and playback format (24kHz PCM).
  */
 export async function getAiraAudio(text: string): Promise<string | null> {
+  if (!text || !text.trim() || text.trim() === "...") {
+    return null;
+  }
+
   try {
     const customApiKey = getCustomApiKey();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
     const response = await fetch("/api/tts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      signal: controller.signal,
       body: JSON.stringify({
-        text,
+        text: text.trim(),
         customApiKey,
       }),
     });
 
+    clearTimeout(timeoutId);
+
     if (!response.ok) {
-      throw new Error(`TTS server responded with ${response.status}`);
+      return null;
     }
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({ audio: null }));
     return data.audio || null;
-  } catch (error) {
-    console.error("AIRA TTS Error:", error);
+  } catch (error: any) {
+    // Graceful fallback to browser speech synthesis
     return null;
   }
 }
