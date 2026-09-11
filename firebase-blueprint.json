@@ -1,0 +1,30 @@
+{
+  "entities": {
+    "UserProfile": {
+      "collection": "users",
+      "fields": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "provider": { "type": "string" },
+        "role": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "lastLoginAt": { "type": "string" },
+        "status": { "type": "string" },
+        "goals": { "type": "string" },
+        "preferences": { "type": "string" },
+        "memoryEnabled": { "type": "boolean" }
+      }
+    },
+    "UserMemory": {
+      "collection": "users/{userId}/memories",
+      "fields": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "category": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
+    }
+  }
+}
